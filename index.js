@@ -1,9 +1,9 @@
 const express = require('express'); //Import the express dependency
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const JSON = require("querystring");
-const app = express();              //Instantiate an express app, the main work horse of this server
-const port = 4221;                  //Save the port number where your server will be listening
+const JSON = require('querystring');
+const app = express();                    //Instantiate an express app, the main work horse of this server
+const port = process.env.PORT || 3000     //Save the port number where your server will be listening
 
 let goldenShots = [];
 
