@@ -4,7 +4,7 @@ const cors = require('cors');
 const JSON = require('querystring');
 const app = express();                    //Instantiate an express app, the main work horse of this server
 const port = process.env.PORT || 3000     //Save the port number where your server will be listening
-
+const postKey = process.env.USER_ID;
 let goldenShots = [];
 
 app.use(cors());
@@ -12,20 +12,31 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get('/', function(req, res){
+    //res.sendFile('./index.html');
+});
+
 app.post('/goldenShot', (req, res) => {
 
 goldenShots = [];
-    const data = req.body;
-    //res.setHeader('Content-Type', 'asplication/json');
-    res.send("Data har uppdaterats");
-    for(let i in data) {
-        let tempShot = {
-            name: data[i].name,
-            score: data[i].score,
-            distance: data[i].distance
-        };
-         goldenShots.push(tempShot);
-     }
+    const key = req.get("userId");
+    console.log("incoming key: " + key);
+    console.log("Env_key: " + postKey);
+
+    if (key === postKey) {
+        const data = req.body;
+        //res.setHeader('Content-Type', 'aplication/json');
+        res.send("Data har uppdaterats");
+        for (let i in data) {
+            let tempShot = {
+                name: data[i].name,
+                score: data[i].score,
+                distance: data[i].distance
+            };
+            goldenShots.push(tempShot);
+        }
+    }
+    res.status(404).json("felaktigt anrop");
 });
 
 
