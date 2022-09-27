@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();                    //Instantiate an express app, the main work horse of this server
 const port = process.env.PORT || 3000;    //Save the port number where your server will be listening
-const postKey = process.env.POST_KEY;
+const apiKey = process.env.API_KEY;
+//const getKey
 let goldenShots = [];
 
 app.use(cors());
@@ -18,9 +19,9 @@ app.get('/', function(req, res){
 app.post('/goldenShot', (req, res) => {
 
 goldenShots = [];
-    const key = req.get("userId");
+    const postKey = req.get("userId");
 
-    if (key === postKey) {
+    if (postKey === apiKey) {
         const data = req.body;
         //res.setHeader('Content-Type', 'aplication/json');
         res.send("Data har uppdaterats");
@@ -32,6 +33,9 @@ goldenShots = [];
             };
             goldenShots.push(tempShot);
         }
+        var time = new Date().toLocaleTimeString();
+        console.log("Data har uppdaterats " + date);
+
     } else {
         res.status(401).json("felaktigt anrop");
     }
@@ -40,9 +44,15 @@ goldenShots = [];
 
 //Idiomatic expression in express to route and respond to a client request
 app.get('/goldenShot', (req, res) => {        //get requests to the root ("/") will route here
-    res.setHeader('Content-Type', 'application/json');
-    goldenShots.sort((a, b) => (a.distance > b.distance) ? 1 : -1);
-    res.send(goldenShots);  //server responds by sending the index.html file to the client's browser
+    const getKey = req.get("userId");
+    if(getKey === apiKey) {
+        res.setHeader('Content-Type', 'application/json');
+        goldenShots.sort((a, b) => (a.distance > b.distance) ? 1 : -1);
+        res.send(goldenShots);  //server responds by sending the index.html file to the client's browser
+    }
+    else {
+        res.status(401).json("felaktigt anrop");
+    }
 });
 
 app.listen(port, () => console.log(`Golden shot server listening on port ${port}!`));
