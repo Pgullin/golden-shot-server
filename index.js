@@ -1,10 +1,9 @@
 const express = require('express'); //Import the express dependency
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const JSON = require('querystring');
 const app = express();                    //Instantiate an express app, the main work horse of this server
-const port = process.env.PORT || 3000     //Save the port number where your server will be listening
-const postKey = process.env.USER_ID;
+const port = process.env.PORT || 3000;    //Save the port number where your server will be listening
+const postKey = process.env.POST_KEY;
 let goldenShots = [];
 
 app.use(cors());
@@ -20,8 +19,6 @@ app.post('/goldenShot', (req, res) => {
 
 goldenShots = [];
     const key = req.get("userId");
-    console.log("incoming key: " + key);
-    console.log("Env_key: " + postKey);
 
     if (key === postKey) {
         const data = req.body;
@@ -35,8 +32,9 @@ goldenShots = [];
             };
             goldenShots.push(tempShot);
         }
+    } else {
+        res.status(401).json("felaktigt anrop");
     }
-    res.status(404).json("felaktigt anrop");
 });
 
 
