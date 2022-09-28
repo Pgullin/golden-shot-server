@@ -12,10 +12,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', function(req, res){
-    //res.sendFile('./index.html');
-});
-
 app.post('/goldenShot', (req, res) => {
 
 goldenShots = [];
@@ -34,7 +30,7 @@ goldenShots = [];
             goldenShots.push(tempShot);
         }
         var time = new Date().toLocaleTimeString();
-        console.log("Data har uppdaterats " + date);
+        console.log("Data har uppdaterats " + time);
 
     } else {
         res.status(401).json("felaktigt anrop");
@@ -44,15 +40,13 @@ goldenShots = [];
 
 //Idiomatic expression in express to route and respond to a client request
 app.get('/goldenShot', (req, res) => {        //get requests to the root ("/") will route here
-    const getKey = req.get("userId");
-    if(getKey === apiKey) {
         res.setHeader('Content-Type', 'application/json');
         goldenShots.sort((a, b) => (a.distance > b.distance) ? 1 : -1);
-        res.send(goldenShots);  //server responds by sending the index.html file to the client's browser
-    }
-    else {
-        res.status(401).json("felaktigt anrop");
-    }
+        res.send(goldenShots);//server responds by sending the index.html file to the client's browser
+    const time = new Date().toLocaleTimeString();
+    console.log('Data har hämtats' + time);
+
+
 });
 
 app.listen(port, () => console.log(`Golden shot server listening on port ${port}!`));
